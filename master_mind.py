@@ -7,9 +7,10 @@
 # v1.01
 # 15-8-2024
 # Last mod by DevJan : added loop for replay
-print("MasterMind")
 
 import random
+
+print("MasterMind")
 
 
 def generate_code(length=4, digits=6):
@@ -33,25 +34,29 @@ def get_feedback(secret, guess):
     return black_pegs, white_pegs
 
 
-def show_secret(mystery):
-    print(mystery)
+def show_secret(secret):
+    print(secret)
 
 
 def play_mastermind():
     print("Welcome to Mastermind!")
     print("Guess the 4-digit code. Each digit is from 1 to 6. You have 10 attempts.")
-    secret_code = generate_code()
-    attempts = 10
 
-    for attempt in range(1, attempts + 1):
-        guess = ""
-        valid_guess = False
-        while not valid_guess:
+    secret_code = generate_code()
+    max_attempts = 10
+
+    for attempt in range(1, max_attempts + 1):
+        while True:
             guess = input(f"Attempt {attempt}: ").strip()
-            valid_guess = len(guess) == 4 and all(c in "123456" for c in guess)
-            if not valid_guess:
-                print("Invalid input. Enter 4 digits, each from 1 to 6.")
-            show_secret(secret_code) if guess == "cheat" else False
+
+            if guess.lower() == "cheat":
+                show_secret(secret_code)
+                continue
+
+            if len(guess) == 4 and all(c in "123456" for c in guess):
+                break
+
+            print("Invalid input. Enter 4 digits, each from 1 to 6.")
 
         black, white = get_feedback(secret_code, guess)
         print(f"Black pegs (correct position): {black}, White pegs (wrong position): {white}")
@@ -64,7 +69,7 @@ def play_mastermind():
 
 
 if __name__ == "__main__":
-    again = 'Y'
-    while again == 'Y':
+    play_again = 'Y'
+    while play_again == 'Y':
         play_mastermind()
-        again = input(f"Play again (Y/N) ?").upper()
+        play_again = input("Play again (Y/N)? ").strip().upper()
