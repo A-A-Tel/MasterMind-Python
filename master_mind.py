@@ -9,22 +9,21 @@
 # Last mod by DevJan : added loop for replay
 
 import random
-
-print("MasterMind")
+from os import getenv
 
 
 def generate_code(length=4, digits=6):
     return [str(random.randint(1, digits)) for _ in range(length)]
 
 
-def get_feedback(secret, guess):
-    black_pegs = sum(s == g for s, g in zip(secret, guess))
+def get_feedback(secret_code, guess):
+    black_pegs = sum(s == g for s, g in zip(secret_code, guess))
 
     # Count whites by subtracting black and calculating min digit frequency match
     secret_counts = {}
     guess_counts = {}
 
-    for s, g in zip(secret, guess):
+    for s, g in zip(secret_code, guess):
         if s != g:
             secret_counts[s] = secret_counts.get(s, 0) + 1
             guess_counts[g] = guess_counts.get(g, 0) + 1
@@ -32,11 +31,6 @@ def get_feedback(secret, guess):
     white_pegs = sum(min(secret_counts.get(d, 0), guess_counts.get(d, 0)) for d in guess_counts)
 
     return black_pegs, white_pegs
-
-
-def show_secret(secret):
-    print(secret)
-
 
 def play_mastermind():
     print("Welcome to Mastermind!")
@@ -49,8 +43,8 @@ def play_mastermind():
         while True:
             guess = input(f"Attempt {attempt}: ").strip()
 
-            if guess.lower() == "cheat":
-                show_secret(secret_code)
+            if guess.lower() == getenv("DEBUG_PASS"):
+                print(secret_code)
                 continue
 
             if len(guess) == 4 and all(c in "123456" for c in guess):
@@ -70,6 +64,7 @@ def play_mastermind():
 
 if __name__ == "__main__":
     play_again = 'Y'
+    print("MasterMind")
     while play_again == 'Y':
         play_mastermind()
         play_again = input("Play again (Y/N)? ").strip().upper()
