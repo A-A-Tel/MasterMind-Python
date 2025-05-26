@@ -11,9 +11,16 @@
 import random
 from os import getenv
 
+VALID_CHARACTERS = "123456RGBYOP"
+CODE_LENGTH = 4
 
-def generate_code(length=4, digits=6):
-    return [str(random.randint(1, digits)) for _ in range(length)]
+def generate_code():
+
+    code = ""
+    for _ in range(CODE_LENGTH):
+        code += random.choice(VALID_CHARACTERS)
+    
+    return code
 
 
 def get_feedback(secret_code, guess):
@@ -34,23 +41,23 @@ def get_feedback(secret_code, guess):
 
 def play_mastermind():
     print("Welcome to Mastermind!")
-    print("Guess the 4-digit code. Each digit is from 1 to 6. You have 10 attempts.")
+    print("Guess the code! Valid characters: " + VALID_CHARACTERS + ", Code length: " + str(CODE_LENGTH))
 
     secret_code = generate_code()
     max_attempts = 10
 
     for attempt in range(1, max_attempts + 1):
         while True:
-            guess = input(f"Attempt {attempt}: ").strip()
+            guess = input(f"Attempt {attempt}: ").upper().strip()
 
             if guess.lower() == getenv("DEBUG_PASS"):
                 print(secret_code)
                 continue
 
-            if len(guess) == 4 and all(c in "123456" for c in guess):
+            if len(guess) == CODE_LENGTH and all(c in VALID_CHARACTERS for c in guess):
                 break
 
-            print("Invalid input. Enter 4 digits, each from 1 to 6.")
+            print("Invalid input. Valid characters: " + VALID_CHARACTERS + ", Code length: " + str(CODE_LENGTH))
 
         black, white = get_feedback(secret_code, guess)
         print(f"Black pegs (correct position): {black}, White pegs (wrong position): {white}")
