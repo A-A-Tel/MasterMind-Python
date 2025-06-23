@@ -14,12 +14,12 @@ from os import getenv
 VALID_CHARACTERS = "123456RGBYOP"
 CODE_LENGTH = 4
 
-def generate_code():
 
+def generate_code():
     code = ""
     for _ in range(CODE_LENGTH):
         code += random.choice(VALID_CHARACTERS)
-    
+
     return code
 
 
@@ -38,6 +38,7 @@ def get_feedback(secret_code, guess):
     white_pegs = sum(min(secret_counts.get(d, 0), guess_counts.get(d, 0)) for d in guess_counts)
 
     return black_pegs, white_pegs
+
 
 def play_mastermind():
     print("Welcome to Mastermind!")
